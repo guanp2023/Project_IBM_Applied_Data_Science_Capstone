@@ -1,0 +1,74 @@
+Task 1: 
+Display the names of the unique launch sites in the space mission
+%sql SELECT DISTINCT Launch_Site FROM SPACEXTBL
+
+
+Task 2: 
+Display 5 records where launch sites begin with the string 'CCA'
+%sql SELECT Launch_Site FROM SPACEXTBL WHERE Launch_Site LIKE '%CCA%' LIMIT 5
+
+
+Task 3: 
+Display the total payload mass carried by boosters launched by NASA (CRS)
+%sql SELECT SUM(PAYLOAD_MASS__KG_) FROM SPACEXTBL WHERE Customer == 'NASA (CRS)'
+
+
+Task 4: 
+Display average payload mass carried by booster version F9 v1.1
+%sql SELECT AVG(PAYLOAD_MASS__KG_) FROM SPACEXTBL WHERE Booster_Version == 'F9 v1.1'
+
+
+Task 5: 
+List the date when the first succesful landing outcome in ground pad was acheived.
+Hint:Use min function
+%sql SELECT MIN(Date) FROM SPACEXTBL WHERE Landing_Outcome == 'Success (ground pad)'
+
+
+Task 6: 
+List the names of the boosters which have success in drone ship and have payload mass greater than 4000 but less than 6000
+%sql SELECT Booster_Version FROM SPACEXTBL WHERE Landing_Outcome == 'Success (drone ship)' AND PAYLOAD_MASS__KG_ BETWEEN 4000 AND 6000     
+
+
+Task 7: 
+List the total number of successful and failure mission outcomes
+%sql SELECT COUNT(Mission_Outcome) FROM SPACEXTBL WHERE Mission_Outcome == 'Success' OR Mission_Outcome == 'Failure'     
+
+
+Task 8: 
+List the names of the booster_versions which have carried the maximum payload mass. Use a subquery
+%sql SELECT Booster_Version FROM SPACEXTBL WHERE PAYLOAD_MASS__KG_ == (SELECT MAX(PAYLOAD_MASS__KG_) FROM SPACEXTBL)
+
+
+Task 9: 
+List the records which will display the month names, failure landing_outcomes in drone ship, booster versions, launch_site for the months in year 2015.
+Note: SQLLite does not support monthnames. So you need to use substr(Date,6,2) as month to get the months and substr(Date,1,4)='2015' for year.
+当使用 substr(Date, 6, 2) 提取日期字符串中的月份部分时，它将从日期字符串的第6个字符开始提取连续的2个字符。让我们用一个示例来说明：
+假设有一个日期字符串为 '2024-04-18'，我们将应用 substr(Date, 6, 2) 来提取月份部分。
+substr(Date, 6, 2) 表示从第6个字符开始提取连续的2个字符。
+在字符串 '2024-04-18' 中，第6个字符是 '0'，第7个字符是 '4'，第8个字符是 '-'，因此提取的月份部分为 '04'。
+所以，在这个例子中，substr(Date, 6, 2) 将返回 '04'，代表四月份。
+%%sql 
+SELECT substr(Date, 6, 2) as 'month', Landing_Outcome, Booster_Version, Launch_Site 
+FROM SPACEXTBL 
+WHERE substr(Date, 1, 4) = '2015' AND Landing_Outcome = 'Failure (drone ship)' 
+
+
+Task 10: 
+Rank the count of landing outcomes (such as Failure (drone ship) or Success (ground pad)) between the date 2010-06-04 (2010-Jun-04) and 2017-03-20 (2017-Mar-20), in descending order.
+%%sql 
+SELECT COUNT(Date) AS Counts, Landing_Outcome 
+FROM SPACEXTBL 
+WHERE ((Landing_Outcome LIKE '%Success%') OR (Landing_Outcome LIKE '%Failure%')) AND ((substr(Date,9,2) >= '04' AND substr(Date,6,2) BETWEEN '06' AND '12' AND substr(Date,1,4)='2010') OR (substr(Date,1,4) BETWEEN '2011' AND '2016') OR (substr(Date,9,2) < '20' AND substr(Date,6,2) BETWEEN '01' AND '03' AND substr(Date,1,4)='2017')) 
+GROUP BY Landing_Outcome
+ORDER BY Counts DESC
+
+
+
+
+
+
+
+
+
+
+
