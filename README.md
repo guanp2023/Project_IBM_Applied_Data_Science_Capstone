@@ -1,6 +1,6 @@
-**Project - IBM Applied Data Science Capstone
+Project - IBM Applied Data Science Capstone
 
-Introduction:**
+Introduction:
 
 This is the final project in the IBM Data Science Professional Certificate. You will practice the work that data scientists do in real life when working with datasets in this capstone project.  
 
